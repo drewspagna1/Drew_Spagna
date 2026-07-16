@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drew Spagna, AI Solutions Architect</title>
+<style>
+  :root {
+    --ink: #1a1d23;
+    --ink-soft: #4a4f58;
+    --line: #e3e5e9;
+    --accent: #2b5cb8;
+    --bg: #ffffff;
+    --bg-alt: #f7f8fa;
+    --chip-bg: #eef2f9;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+  header.hero {
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--line);
+    padding: 64px 0 32px;
+  }
+  h1 { font-size: 2.1rem; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .title { font-size: 1.15rem; color: var(--accent); font-weight: 600; margin: 0 0 14px; }
+  .contact { font-size: 0.92rem; color: var(--ink-soft); }
+  .contact a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line); }
+  .contact a:hover { color: var(--accent); border-color: var(--accent); }
+  .contact .sep { margin: 0 8px; color: var(--line); }
+
+  nav.tabs {
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  nav.tabs .wrap { display: flex; gap: 4px; padding: 0 24px; }
+  nav.tabs button {
+    appearance: none;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    padding: 16px 14px;
+    cursor: pointer;
+  }
+  nav.tabs button:hover { color: var(--ink); }
+  nav.tabs button.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  section { padding: 40px 0; border-bottom: 1px solid var(--line); }
+  section:last-of-type { border-bottom: none; }
+  h2 {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 0 0 20px;
+  }
+  p { color: var(--ink-soft); margin: 0 0 12px; }
+  p:last-child { margin-bottom: 0; }
+
+  .note {
+    background: var(--chip-bg);
+    border-left: 3px solid var(--accent);
+    padding: 14px 18px;
+    border-radius: 4px;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+  }
+  .note strong { color: var(--ink); }
+
+  .lede {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    margin: -8px 0 28px;
+  }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    background: var(--chip-bg);
+    color: var(--ink);
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+  }
+
+  .job { margin-bottom: 32px; }
+  .job:last-child { margin-bottom: 0; }
+  .job-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+  .job-role { font-weight: 700; font-size: 1.02rem; }
+  .job-org { color: var(--accent); font-weight: 600; }
+  .job-meta { color: var(--ink-soft); font-size: 0.85rem; }
+  ul.job-list { margin: 8px 0 0; padding-left: 20px; color: var(--ink-soft); }
+  ul.job-list li { margin-bottom: 6px; }
+
+  .cases { display: flex; flex-direction: column; gap: 20px; }
+  .case {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 22px 24px;
+    background: var(--bg-alt);
+  }
+  .case h3 { margin: 0 0 4px; font-size: 1.05rem; }
+  .case .tag { font-size: 0.78rem; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; display: block;}
+  .case-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 14px; }
+  .case-grid div { font-size: 0.88rem; }
+  .case-grid .k { font-weight: 700; color: var(--ink); display: block; margin-bottom: 3px; }
+  .case-grid .v { color: var(--ink-soft); }
+
+  .case-diagram {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 16px;
+    margin: 16px 0;
+  }
+  .case-diagram svg { width: 100%; height: auto; display: block; }
+  .case-code {
+    background: #1a1d23;
+    color: #e3e5e9;
+    border-radius: 6px;
+    padding: 16px 18px;
+    margin: 16px 0;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+  .case-code code { font-family: "SF Mono", Consolas, "Courier New", monospace; }
+  .case-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    color: var(--ink-soft);
+    margin: 0 0 8px;
+  }
+  .case-doc-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .case-doc-link:hover { border-bottom-color: var(--accent); }
+
+  .builds { display: flex; flex-direction: column; gap: 18px; }
+  .build {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 20px 24px;
+    background: var(--bg-alt);
+  }
+  .build-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
+  .build h3 { margin: 0; font-size: 1.05rem; }
+  .status { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 3px 10px; border-radius: 20px; }
+  .status.shipping { background: #e6f4ea; color: #1e7a3d; }
+  .status.review { background: #fff4e0; color: #9a6300; }
+  .status.dev { background: #eef2f9; color: #2b5cb8; }
+  .build .stack { font-size: 0.82rem; color: var(--ink-soft); margin-top: 10px; }
+  .build .stack span { font-weight: 700; color: var(--ink); }
+
+  @media (max-width: 640px) {
+    .case-grid { grid-template-columns: 1fr; }
+    .job-head { flex-direction: column; }
+    nav.tabs .wrap { padding: 0 16px; overflow-x: auto; }
+  }
+
+  .edu-item { margin-bottom: 14px; }
+  .edu-item:last-child { margin-bottom: 0; }
+  .edu-degree { font-weight: 700; }
+  .edu-meta { color: var(--ink-soft); font-size: 0.9rem; }
+
+  footer { padding: 40px 0 60px; text-align: center; color: var(--ink-soft); font-size: 0.85rem; }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>Drew Spagna</h1>
+    <p class="title">AI Solutions Architect & Technology Strategist</p>
+    <p class="contact">
+      Houston, TX
+      <span class="sep">•</span>
+      <a href="mailto:drew.spagna@gmail.com">drew.spagna@gmail.com</a>
+      <span class="sep">•</span>
+      <a href="https://linkedin.com/in/drew-spagna-85567624/" target="_blank" rel="noopener">LinkedIn</a>
+      <span class="sep">•</span>
+      <a href="https://github.com/drewspagna1" target="_blank" rel="noopener">GitHub</a>
+    </p>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="wrap">
+    <button type="button" data-tab="main" class="active">Profile</button>
+    <button type="button" data-tab="usecases">Use Cases</button>
+    <button type="button" data-tab="builds">Personal Builds</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="tab-panel active" id="tab-main">
+
+  <section id="about">
+    <h2>About</h2>
+    <p>I left oil and gas years ago to get in early on something new. RPA was barely a category yet, most companies didn't know what to call it, and that was exactly what pulled me in. I've kept chasing that same feeling ever since, getting to a shift before it's obvious and figuring out what it actually means in practice.</p>
+    <p>Over the years I've deliberately worked every angle of this. Pre-sales solutions consulting, strategy and advisory work, post-sales solutions architecture, I've sat on pretty much every side of the table in enterprise technology, and I did that on purpose. That cross-functional range is probably the thing I bring that's hardest to fake: I can sell the vision, scope it, build it, and then stick around to make sure it actually works once it's live.</p>
+    <p>I don't think of myself as an "automation person," even though a lot of my resume reads that way. What I actually care about is figuring out where AI and modern systems architecture can change how a business runs, then making that real, whether that's agentic workflows, LLM orchestration, data and integration architecture, or something else entirely. Ten plus years in and the core skill hasn't changed: understand a messy problem well enough to explain it back to the people who own it, then build something that holds up in production. I like the parts of this work most people skip, the debugging, the edge cases, the documentation that makes a handoff actually work.</p>
+  </section>
+
+  <section id="skills">
+    <h2>Core Competencies</h2>
+    <div class="chips">
+      <span class="chip">Solution Architecture</span>
+      <span class="chip">Agentic AI Systems</span>
+      <span class="chip">Workflow Orchestration</span>
+      <span class="chip">Process Reengineering</span>
+      <span class="chip">Data Analysis</span>
+      <span class="chip">Enterprise Integration Architecture</span>
+      <span class="chip">LLM-Based Automation</span>
+      <span class="chip">SDLC & Production System Thinking</span>
+      <span class="chip">Python Backend Development</span>
+      <span class="chip">Stakeholder Engagement</span>
+      <span class="chip">Intelligent Automation</span>
+      <span class="chip">Cloud-Native & Containerized Deployment (Docker, Kubernetes)</span>
+    </div>
+  </section>
+
+  <section id="experience">
+    <h2>Professional Experience</h2>
+
+    <div class="job">
+      <div class="job-head">
+        <div><span class="job-role">Senior Solutions Architect</span> <span class="job-org">at Roots AI</span></div>
+        <div class="job-meta">Remote · 2025 – 2026</div>
+      </div>
+      <ul class="job-list">
+        <li>Designed and deployed AI-driven automation workflows using LLM orchestration, tool-calling agents, and API-based systems.</li>
+        <li>Built Python-based automation components to support workflow execution and system integration.</li>
+        <li>Developed prompt and orchestration patterns to improve reliability, accuracy, and consistency of LLM-driven workflows.</li>
+        <li>Translated business requirements into structured automation logic across distributed systems and data pipelines.</li>
+        <li>Tested, validated, and debugged AI outputs to improve workflow stability and reduce failure rates.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <div><span class="job-role">Intelligent Automation Solutions Consultant</span> <span class="job-org">at TruStage</span></div>
+        <div class="job-meta">Remote · 2022 – 2025</div>
+      </div>
+      <ul class="job-list">
+        <li>Delivered AI-enabled automation solutions across enterprise operations using APIs, low-code platforms, and Python-based tooling.</li>
+        <li>Partnered with business stakeholders to redesign workflows and identify opportunities for AI-driven efficiency gains.</li>
+        <li>Implemented integration workflows connecting enterprise systems via APIs and event-driven architectures.</li>
+        <li>Developed solution designs, implementation plans, and technical documentation for AI-enabled transformations.</li>
+        <li>Supported production rollout and refinement of automation systems based on operational feedback.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <div><span class="job-role">Senior Solutions Consultant</span> <span class="job-org">at Blue Prism Software Inc</span></div>
+        <div class="job-meta">Remote · 2020 – 2022</div>
+      </div>
+      <ul class="job-list">
+        <li>Led pre-sales solution design including discovery workshops, technical architecture definition, and ROI modeling across 5–10 concurrent enterprise accounts.</li>
+        <li>Delivered enterprise automation demos and proof-of-concept solutions contributing to deal progression and pipeline conversion.</li>
+        <li>Collaborated with enterprise architects and SMEs to document end-to-end business processes supporting automation of high-volume workflows.</li>
+        <li>Developed training programs and mentored junior consultants, improving team delivery productivity by ~15%.</li>
+        <li>Implemented enterprise RPA solutions across multiple industries, enabling 20–40% reductions in manual processing time depending on workflow.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <div><span class="job-role">Senior Solutions Consultant & Pre-Sales Architect</span> <span class="job-org">at Thoughtonomy (A Blue Prism Company)</span></div>
+        <div class="job-meta">Houston, TX · 2018 – 2020</div>
+      </div>
+      <ul class="job-list">
+        <li>Designed and built automation workflow prototypes demonstrating intelligent process automation and system integration.</li>
+        <li>Translated business requirements into executable workflow designs using configuration, scripting, and API-based integrations.</li>
+        <li>Supported engineering teams in refining automation logic and improving platform behavior through iterative testing.</li>
+        <li>Delivered technical demos showcasing AI-enabled automation and backend workflow execution.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <div><span class="job-role">RPA Business Analyst</span> <span class="job-org">at Equinor</span></div>
+        <div class="job-meta">Houston, TX · 2017 – 2018</div>
+      </div>
+      <ul class="job-list">
+        <li>Identified and delivered automation opportunities resulting in ~30 hours/month saved per digital worker across targeted workflows.</li>
+        <li>Supported configuration and deployment of enterprise automation solutions across multiple business units.</li>
+        <li>Developed KPIs and performance dashboards to measure automation effectiveness and operational efficiency.</li>
+        <li>Standardized documentation practices, improving process consistency and reducing rework in automation design cycles.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <div><span class="job-role">Business Analyst</span> <span class="job-org">at Equinor</span></div>
+        <div class="job-meta">2010 – 2017</div>
+      </div>
+      <ul class="job-list">
+        <li>Designed and implemented global business processes, including gap analysis and process improvement initiatives.</li>
+        <li>Led change management efforts supporting global process adoption.</li>
+        <li>Developed a Global Operating Model to support enterprise process standardization.</li>
+        <li>Improved operational efficiency by 15% through targeted process reengineering.</li>
+      </ul>
+    </div>
+
+  </section>
+
+  <section id="education">
+    <h2>Education & Certifications</h2>
+    <div class="edu-item">
+      <div class="edu-degree">Bachelor of Science, Business Management and Mathematics</div>
+      <div class="edu-meta">Park University, Kansas City, Missouri</div>
+    </div>
+    <div class="edu-item">
+      <div class="edu-degree">Associate in Science, Biochemistry Emphasis</div>
+      <div class="edu-meta">Park University, Kansas City, Missouri</div>
+    </div>
+    <div class="edu-item">
+      <div class="edu-degree">AWS Certified Solutions Architect</div>
+      <div class="edu-meta">Credential ID b05514a2eaeb490c9e5805cf92a5fd0c</div>
+    </div>
+    <div class="edu-item">
+      <div class="edu-degree">Blue Prism Certified Developer</div>
+    </div>
+  </section>
+
+  </div>
+
+  <div class="tab-panel" id="tab-usecases">
+  <section id="cases" style="border-bottom: none;">
+    <h2>Use Cases</h2>
+    <p class="lede">Representative of real project work I've delivered. Details generalized to protect customer confidentiality.</p>
+    <div class="cases">
+
+      <div class="case">
+        <span class="tag">Agentic Workflow Automation</span>
+        <h3>Durable orchestration pipeline for AI-driven work processing</h3>
+        <p>I didn't build this orchestration framework from scratch, I inherited it and pushed it a lot further. The core pattern processes work items end to end without a person babysitting every step: a durable orchestrator kicks off a get-work stage, chains into a second activity that loads validated items onto a queue, and a separate queue-triggered function actually does the work asynchronously, so one slow item can't block the whole batch. My contribution was taking that framework and building a standardized, object-oriented orchestration layer on top of it, as an optional path teams could opt into instead of rebuilding the same pipeline logic by hand for every new customer. Nobody was forced onto it, but it was there so a team could apply the blueprint and adapt just the pieces specific to that customer's process instead of starting from a blank file. Every completed item posts back through its
