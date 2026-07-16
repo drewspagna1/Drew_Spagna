@@ -364,4 +364,254 @@
       <div class="case">
         <span class="tag">Agentic Workflow Automation</span>
         <h3>Durable orchestration pipeline for AI-driven work processing</h3>
-        <p>I didn't build this orchestration framework from scratch, I inherited it and pushed it a lot further. The core pattern processes work items end to end without a person babysitting every step: a durable orchestrator kicks off a get-work stage, chains into a second activity that loads validated items onto a queue, and a separate queue-triggered function actually does the work asynchronously, so one slow item can't block the whole batch. My contribution was taking that framework and building a standardized, object-oriented orchestration layer on top of it, as an optional path teams could opt into instead of rebuilding the same pipeline logic by hand for every new customer. Nobody was forced onto it, but it was there so a team could apply the blueprint and adapt just the pieces specific to that customer's process instead of starting from a blank file. Every completed item posts back through its
+        <p>I didn't build this orchestration framework from scratch, I inherited it and pushed it a lot further. The core pattern processes work items end to end without a person babysitting every step: a durable orchestrator kicks off a get-work stage, chains into a second activity that loads validated items onto a queue, and a separate queue-triggered function actually does the work asynchronously, so one slow item can't block the whole batch. My contribution was taking that framework and building a standardized, object-oriented orchestration layer on top of it, as an optional path teams could opt into instead of rebuilding the same pipeline logic by hand for every new customer. Nobody was forced onto it, but it was there so a team could apply the blueprint and adapt just the pieces specific to that customer's process instead of starting from a blank file. Every completed item posts back through its own validation queue, so bad postbacks get caught and retried instead of silently disappearing. Failures aren't treated as one bucket either: business exceptions, things where the automation genuinely can't make the call, route to a human review queue, while system exceptions, timeouts, connectivity issues, that kind of thing, get retried or alerted on automatically. I also built in a standing health check that monitors database, third-party API, and auth connectivity so the app can flag or reset itself before anyone notices it's degraded, plus a manual review view so a person can close out or reprocess anything the automation couldn't resolve on its own.</p>
+
+        <p class="case-label">Architecture</p>
+        <div class="case-diagram">
+          <svg viewBox="0 0 780 400" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#4a4f58"/>
+              </marker>
+              <marker id="arrowDash" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#2b5cb8"/>
+              </marker>
+            </defs>
+
+            <!-- Row 1: get-work flow -->
+            <rect x="10" y="24" width="90" height="56" rx="6" fill="#f7f8fa" stroke="#e3e5e9"/>
+            <text x="55" y="57" text-anchor="middle" font-size="11" fill="#1a1d23">Trigger</text>
+
+            <rect x="130" y="24" width="130" height="56" rx="6" fill="#eef2f9" stroke="#2b5cb8"/>
+            <text x="195" y="52" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1d23">Orchestrator</text>
+            <text x="195" y="66" text-anchor="middle" font-size="9.5" fill="#4a4f58">(get_work)</text>
+
+            <rect x="290" y="24" width="140" height="56" rx="6" fill="#eef2f9" stroke="#2b5cb8"/>
+            <text x="360" y="52" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1d23">Get-Work</text>
+            <text x="360" y="66" text-anchor="middle" font-size="9.5" fill="#4a4f58">(Activity)</text>
+
+            <rect x="460" y="24" width="130" height="56" rx="6" fill="#eef2f9" stroke="#2b5cb8"/>
+            <text x="525" y="52" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1d23">Load to Queue</text>
+            <text x="525" y="66" text-anchor="middle" font-size="9.5" fill="#4a4f58">(Activity)</text>
+
+            <rect x="620" y="24" width="150" height="56" rx="6" fill="#f7f8fa" stroke="#e3e5e9"/>
+            <text x="695" y="52" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1d23">Do-Work</text>
+            <text x="695" y="66" text-anchor="middle" font-size="9.5" fill="#4a4f58">(Queue Trigger)</text>
+
+            <line x1="100" y1="52" x2="126" y2="52" stroke="#4a4f58" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <line x1="260" y1="52" x2="286" y2="52" stroke="#4a4f58" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <line x1="430" y1="52" x2="456" y2="52" stroke="#4a4f58" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <line x1="590" y1="52" x2="616" y2="52" stroke="#4a4f58" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+            <text x="360" y="106" text-anchor="middle" font-size="9.5" fill="#4a4f58">work queue</text>
+            <text x="525" y="106" text-anchor="middle" font-size="9.5" fill="#4a4f58">work-items queue</text>
+
+            <!-- connector down to row 2 -->
+            <line x1="695" y1="80" x2="695" y2="150" stroke="#2b5cb8" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrowDash)"/>
+            <text x="620" y="120" text-anchor="middle" font-size="9" fill="#2b5cb8">on completion</text>
+
+            <!-- Row 2: postback loop -->
+            <rect x="440" y="150" width="170" height="56" rx="6" fill="#f7f8fa" stroke="#e3e5e9"/>
+            <text x="525" y="178" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1d23">Postback</text>
+            <text x="525" y="192" text-anchor="middle" font-size="9.5" fill="#4a4f58">(HTTP Trigger)</text>
+
+            <rect x="260" y="150" width="150" height="56" rx="6" fill="#f7f8fa" stroke="#e3e5e9"/>
+            <text x="335" y="178" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1d23">Postback Queue</text>
+            <text x="335" y="192" text-anchor="middle" font-size="9.5" fill="#4a4f58">validation</text>
+
+            <rect x="60" y="150" width="170" height="56" rx="6" fill="#eef2f9" stroke="#2b5cb8"/>
+            <text x="145" y="178" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1d23">Review Dashboard</text>
+            <text x="145" y="192" text-anchor="middle" font-size="9.5" fill="#4a4f58">manual close / reprocess</text>
+
+            <line x1="440" y1="178" x2="414" y2="178" stroke="#4a4f58" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <line x1="260" y1="178" x2="234" y2="178" stroke="#4a4f58" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+            <!-- Row 3: exception routing -->
+            <rect x="60" y="250" width="300" height="70" rx="6" fill="#fff4e0" stroke="#e8c27a"/>
+            <text x="210" y="275" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1d23">Business Exception</text>
+            <text x="210" y="290" text-anchor="middle" font-size="9.5" fill="#4a4f58">no confident answer &#8594; human review queue</text>
+            <text x="210" y="305" text-anchor="middle" font-size="9.5" fill="#4a4f58">(routes to Review Dashboard)</text>
+
+            <rect x="410" y="250" width="300" height="70" rx="6" fill="#e6f4ea" stroke="#9bcbac"/>
+            <text x="560" y="275" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1d23">System Exception</text>
+            <text x="560" y="290" text-anchor="middle" font-size="9.5" fill="#4a4f58">timeout / connectivity &#8594; retry with backoff</text>
+            <text x="560" y="305" text-anchor="middle" font-size="9.5" fill="#4a4f58">or alert once retries are exhausted</text>
+
+            <!-- Row 4: health check -->
+            <rect x="60" y="345" width="650" height="46" rx="6" fill="#f7f8fa" stroke="#e3e5e9"/>
+            <text x="90" y="373" font-size="10.5" fill="#4a4f58">Standing <tspan font-weight="700" fill="#1a1d23">Health Check</tspan> (HTTP Trigger): monitors DB / third-party API / auth, flags or resets the app before anyone notices it's degraded</text>
+          </svg>
+        </div>
+
+        <p class="case-label">Exception routing (illustrative)</p>
+        <div class="case-code"><code>def handle_activity_error(exc: Exception, item_id: str) -&gt; None:
+    if isinstance(exc, BusinessException):
+        # automation can't make the call, needs a human
+        review_queue.enqueue(item_id, reason=str(exc))
+        return
+
+    if isinstance(exc, SystemException):
+        # transient failure, safe to retry
+        if attempt_count(item_id) &lt; MAX_RETRIES:
+            retry_queue.enqueue(item_id, delay=backoff(item_id))
+        else:
+            alerting.notify(f"system exception exhausted retries: {item_id}")
+        return
+
+    raise exc  # anything unclassified fails loud, on purpose</code></div>
+
+        <div class="case-grid">
+          <div><span class="k">Approach</span><span class="v">Took an inherited durable orchestration framework and layered in an optional, reusable object-oriented template on top</span></div>
+          <div><span class="k">Stack</span><span class="v">Python, Azure Durable Functions, Azure Queue Storage</span></div>
+          <div><span class="k">Outcome</span><span class="v">Reusable orchestration template adopted across customer engagements, with built-in retry, health monitoring, and human-in-the-loop exception handling</span></div>
+        </div>
+      </div>
+
+      <div class="case">
+        <span class="tag">Pre-Sales Solutions Architecture</span>
+        <h3>Designing the technical case that wins the deal</h3>
+        <p>An enterprise prospect wasn't going to sign anything until someone proved that connecting their siloed systems, think claims, policy, and case management platforms with no shared source of truth, was actually solvable. That's a pre-sales problem as much as an engineering one. I ran the discovery workshops to map how data actually needed to move, designed an event-driven integration architecture as the technical centerpiece of the proposal, and built the ROI model that translated the engineering reality into something a VP could sign off on. Where the deal called for it, I also scoped a proof-of-concept that validated the riskiest part of the architecture before anyone committed budget, so delivery inherited a design that was already proven instead of a slide deck promise.</p>
+        <div class="case-grid">
+          <div><span class="k">Approach</span><span class="v">Discovery workshops, event-driven architecture design, ROI modeling, PoC validation</span></div>
+          <div><span class="k">Stack</span><span class="v">REST/webhook APIs, low-code orchestration, stakeholder workshops</span></div>
+          <div><span class="k">Outcome</span><span class="v">Deal progression, plus a design delivery could build from without starting over</span></div>
+        </div>
+      </div>
+
+      <div class="case">
+        <span class="tag">RPA-to-AI Migration</span>
+        <h3>Modernizing legacy RPA into LLM-assisted automation</h3>
+        <p>A long-running RPA program had dozens of bots that were great at structured, rules-based work and fell apart on anything needing judgment: unstructured documents, ambiguous free text, exceptions the decision tree just wasn't built for. Instead of ripping it all out, I scoped a migration path that layered LLM reasoning on top of the existing automation, only for the tasks where rules-based logic was actually breaking, and left the reliable bots doing what they were already good at. The real work was deciding exactly where "deterministic automation" should end and "AI judgment" should start, then building clean interfaces between the two so the whole pipeline stayed auditable.</p>
+        <div class="case-grid">
+          <div><span class="k">Approach</span><span class="v">Hybrid RPA + LLM architecture, scoped modernization plan</span></div>
+          <div><span class="k">Stack</span><span class="v">Blue Prism, Python, LLM APIs, document/text processing</span></div>
+          <div><span class="k">Outcome</span><span class="v">Extended automation coverage into previously manual exception handling</span></div>
+        </div>
+      </div>
+
+      <div class="case">
+        <span class="tag">Technical Integration Proposal</span>
+        <h3>Keeping Jira the single source of truth across three systems</h3>
+        <p>This one's a proposal I put together for an interview exercise, not delivered client work, but it's close to how I'd actually approach the problem so it's worth showing in full. The scenario: a prospective customer wanted to hand off global hardware procurement and lifecycle management to a new IT platform, but their Jira Asset Management instance had to stay the authoritative record auditors query, and it couldn't step on the Mac and Windows device management tools already live. I designed and proposed an integration architecture where the new platform would drive procurement and lifecycle events, the device management tools would report real-time device health, and Jira would reconcile all three into one conflict-resolved record. The proposal included a full field-mapping spec, explicit conflict-resolution rules for when sources disagree (a stale device check-in doesn't get to overrule an active repair status), a PII-stripping layer before anything writes to Jira, and a phased rollout plan that starts read-only and upgrades to real-time sync without re-architecting later. I also built a small local mock server to test my own field-mapping and conflict-resolution assumptions against a simulated version of the platform's API before presenting it, rather than presenting a diagram I hadn't stress-tested at all.</p>
+        <div class="case-grid">
+          <div><span class="k">Approach</span><span class="v">Multi-system reconciliation architecture, field mapping, conflict-resolution rules, phased rollout plan</span></div>
+          <div><span class="k">Stack</span><span class="v">REST APIs, delta polling, webhook-based event sync, PII-filtering middleware</span></div>
+          <div><span class="k">Outcome</span><span class="v">A complete, defensible technical proposal, self-validated against a mocked API, not a shipped integration</span></div>
+        </div>
+        <a class="case-doc-link" href="Technical_Integration_Proposal.pdf" target="_blank" rel="noopener">View the full proposal (PDF) &rarr;</a>
+      </div>
+
+    </div>
+    <div class="note" style="margin-top: 24px;">
+      <strong>Quick note on why this page exists:</strong> I've stopped doing take home assignments, open-ended "use case" exercises, and unpaid sample work as part of interview processes. It's become standard practice in hiring, but common and healthy aren't the same thing, and lately it's drifted into something closer to free labor dressed up as a hiring step. So instead, here's work I've actually done, shipped or close to it. Consider it the example, already built.
+    </div>
+  </section>
+  </div>
+
+  <div class="tab-panel" id="tab-builds">
+  <section id="builds" style="border-bottom: none;">
+    <h2>Personal Builds</h2>
+    <p class="lede">Side projects, actual shipped or shipping products, not mockups. This is the stuff I build for the fun of it, on nights and weekends.</p>
+    <div class="builds">
+
+      <div class="build">
+        <div class="build-head">
+          <h3>Fixworthy</h3>
+          <span class="status review">In App Store review</span>
+        </div>
+        <p>A repair-vs-replace decision engine. You describe what broke, it works through the repair, hire-a-pro, replace, and live-with-it math like an honest broker and shows its reasoning instead of just handing you an answer.</p>
+        <div class="stack"><span>Stack:</span> Swift, Gemini API, on-device estimator logic</div>
+      </div>
+
+      <div class="build">
+        <div class="build-head">
+          <h3>FlexCue</h3>
+          <span class="status shipping">iOS + watchOS</span>
+        </div>
+        <p>A haptic-only form coach for yoga and PT-style exercises. It tracks your body through ARKit, Apple Watch motion, and AirPods orientation, then corrects your form through vibration alone, no screen, no interruption, just a nudge when you drift out of alignment.</p>
+        <div class="stack"><span>Stack:</span> Swift, ARKit, Core Haptics, watchOS companion app</div>
+      </div>
+
+      <div class="build">
+        <div class="build-head">
+          <h3>Grease & Gears</h3>
+          <span class="status shipping">Live</span>
+        </div>
+        <p>A maintenance tracker built for food truck and small fleet operators. Tracks equipment by mileage or hours, logs costs, and pushes alerts before something breaks down mid-shift.</p>
+        <div class="stack"><span>Stack:</span> Flutter</div>
+      </div>
+
+      <div class="build">
+        <div class="build-head">
+          <h3>SilentCue</h3>
+          <span class="status shipping">Live</span>
+        </div>
+        <p>A presenter timer that keeps you on pace without a screen or a sound. It fires distinct vibration patterns through your phone or Watch at key milestones, so you can feel the time instead of glancing down mid-talk.</p>
+        <div class="stack"><span>Stack:</span> Swift, Core Haptics, watchOS companion, StoreKit 2</div>
+      </div>
+
+      <div class="build">
+        <div class="build-head">
+          <h3>SwaptIQ</h3>
+          <span class="status shipping">Live</span>
+        </div>
+        <p>A fantasy sports trade analyzer covering NFL and MLB. Pulls live player values and lets you build a trade with or without a connected roster. There's no clean third-party value source for MLB yet, so I built my own rest-of-season value calculator straight off live stats and roster status from the official MLB Stats API.</p>
+        <div class="stack"><span>Stack:</span> Swift, FantasyCalc API, Sleeper API, MLB Stats API</div>
+      </div>
+
+      <div class="build">
+        <div class="build-head">
+          <h3>Under The Hood</h3>
+          <span class="status review">In App Store review</span>
+        </div>
+        <p>A car scanning app that pulls valuation and parts data through Gemini and eBay's API, plus real labor rate estimates by metro area pulled from quarterly US Bureau of Labor Statistics wage data. I built the whole thing solo, scan flow, backend, and the App Store submission process, warts and all.</p>
+        <div class="stack"><span>Stack:</span> Flutter, Gemini API, eBay API, BLS wage data</div>
+      </div>
+
+    </div>
+  </section>
+  </div>
+
+</div>
+
+<footer>
+  <p>Drew Spagna · <a href="mailto:drew.spagna@gmail.com">drew.spagna@gmail.com</a> · <a href="https://linkedin.com/in/drew-spagna-85567624/" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://github.com/drewspagna1" target="_blank" rel="noopener">GitHub</a></p>
+</footer>
+
+<script>
+  (function () {
+    var buttons = document.querySelectorAll('nav.tabs button');
+    var panels = {
+      main: document.getElementById('tab-main'),
+      usecases: document.getElementById('tab-usecases'),
+      builds: document.getElementById('tab-builds')
+    };
+
+    function activate(tab) {
+      if (!panels[tab]) tab = 'main';
+      buttons.forEach(function (b) {
+        b.classList.toggle('active', b.getAttribute('data-tab') === tab);
+      });
+      Object.keys(panels).forEach(function (key) {
+        panels[key].classList.toggle('active', key === tab);
+      });
+    }
+
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var tab = b.getAttribute('data-tab');
+        window.location.hash = tab;
+        activate(tab);
+      });
+    });
+
+    window.addEventListener('hashchange', function () {
+      activate(window.location.hash.replace('#', ''));
+    });
+
+    activate(window.location.hash.replace('#', '') || 'main');
+  })();
+</script>
+
+</body>
+</html>
