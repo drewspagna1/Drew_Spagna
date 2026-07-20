@@ -164,17 +164,23 @@
   }
   .case-diagram svg { width: 100%; height: auto; display: block; }
   .case-code {
-    background: #14161a;
-    color: #e6e4df;
     border: 1px solid #33373f;
     border-radius: 10px;
-    padding: 18px 20px;
     margin: 18px 0;
-    overflow-x: auto;
+    overflow: hidden;
     font-size: 0.82rem;
-    line-height: 1.6;
   }
-  .case-code code { font-family: "SF Mono", Consolas, "Courier New", monospace; }
+  .case-code pre { margin: 0; }
+  .case-code code {
+    display: block;
+    white-space: pre;
+    overflow-x: auto;
+    padding: 18px 20px;
+    line-height: 1.6;
+    background: #14161a;
+    font-family: "SF Mono", Consolas, "Courier New", monospace;
+    tab-size: 4;
+  }
   .case-label {
     font-size: 0.7rem;
     text-transform: uppercase;
@@ -229,6 +235,11 @@
 
   footer { padding: 48px 0 64px; text-align: center; color: var(--ink-soft); font-size: 0.85rem; }
   footer a { color: var(--accent); text-decoration: none; }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+  /* keep the code block in the site's near-black tone, not the theme default */
+  .case-code code.hljs { background: #14161a; }
 </style>
 </head>
 <body>
@@ -497,7 +508,7 @@
         </div>
 
         <p class="case-label">Exception routing (illustrative)</p>
-        <div class="case-code"><code>def handle_activity_error(exc: Exception, item_id: str) -&gt; None:
+        <div class="case-code"><pre><code class="language-python">def handle_activity_error(exc: Exception, item_id: str) -&gt; None:
     if isinstance(exc, BusinessException):
         # automation can't make the call, needs a human
         review_queue.enqueue(item_id, reason=str(exc))
@@ -511,7 +522,7 @@
             alerting.notify(f"system exception exhausted retries: {item_id}")
         return
 
-    raise exc  # anything unclassified fails loud, on purpose</code></div>
+    raise exc  # anything unclassified fails loud, on purpose</code></pre></div>
 
         <div class="case-grid">
           <div><span class="k">Approach</span><span class="v">Took an inherited durable orchestration framework and layered in an optional, reusable object-oriented template on top</span></div>
@@ -695,6 +706,11 @@
 
     activate(window.location.hash.replace('#', '') || 'main');
   })();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+  if (window.hljs) { hljs.highlightAll(); }
 </script>
 
 </body>
