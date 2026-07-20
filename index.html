@@ -27,15 +27,18 @@
   a { transition: color 0.15s ease, border-color 0.15s ease; }
   .wrap { max-width: 800px; margin: 0 auto; padding: 0 28px; }
   header.hero {
-    background: var(--bg-alt);
-    padding: 96px 0 48px;
+    background: #16181c;
+    background-image: radial-gradient(120% 140% at 15% 0%, #23262c 0%, #16181c 55%);
+    padding: 96px 0 52px;
+    border-bottom: 1px solid #2b2f36;
   }
+  header.hero h1 { color: #f7f6f3; }
   h1 { font-size: 2.5rem; font-weight: 700; margin: 0 0 8px; letter-spacing: -0.025em; }
-  .title { font-size: 1.05rem; color: var(--accent); font-weight: 500; margin: 0 0 22px; letter-spacing: 0.01em; }
-  .contact { font-size: 0.9rem; color: var(--ink-soft); }
-  .contact a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; }
-  .contact a:hover { color: var(--accent); border-color: var(--accent); }
-  .contact .sep { margin: 0 10px; color: var(--line); }
+  .title { font-size: 1.05rem; color: #8fb0e0; font-weight: 500; margin: 0 0 22px; letter-spacing: 0.01em; }
+  .contact { font-size: 0.9rem; color: #a7abb3; }
+  .contact a { color: #cfd2d8; text-decoration: none; border-bottom: 1px solid #3a3e46; padding-bottom: 1px; }
+  .contact a:hover { color: #8fb0e0; border-color: #8fb0e0; }
+  .contact .sep { margin: 0 10px; color: #4a4f58; }
 
   nav.tabs {
     background: rgba(253, 252, 250, 0.92);
@@ -117,27 +120,53 @@
   .case {
     border-radius: 12px;
     padding: 28px 30px;
-    background: var(--bg-alt);
-    box-shadow: var(--shadow);
+    background: #202329;
+    border: 1px solid #2f333b;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2), 0 8px 24px rgba(0,0,0,0.18);
   }
-  .case h3 { margin: 0 0 6px; font-size: 1.08rem; letter-spacing: -0.01em; }
-  .case .tag { font-size: 0.75rem; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 12px; display: block;}
-  .case-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 16px; }
+  .case h3 { margin: 0 0 6px; font-size: 1.08rem; letter-spacing: -0.01em; color: #f7f6f3; }
+  .case .tag { font-size: 0.75rem; color: #8fb0e0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 12px; display: block;}
+  .case-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 18px; border-top: 1px solid #2f333b; padding-top: 16px; }
   .case-grid div { font-size: 0.87rem; }
-  .case-grid .k { font-weight: 700; color: var(--ink); display: block; margin-bottom: 3px; }
-  .case-grid .v { color: var(--ink-soft); }
+  .case-grid .k { font-weight: 700; color: #f7f6f3; display: block; margin-bottom: 3px; }
+  .case-grid .v { color: #b6bac1; }
+
+  .case-blocks { display: flex; flex-direction: column; gap: 18px; margin: 4px 0 4px; }
+  .case-block { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: start; }
+  .case-block .cb-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    color: #8fb0e0;
+    padding-top: 3px;
+  }
+  .case-block .cb-body { margin: 0; color: #cbced4; }
+  .case-block.result {
+    border-left: 2px solid #8fb0e0;
+    background: #262a31;
+    border-radius: 3px;
+    padding: 14px 18px;
+    grid-template-columns: 96px 1fr;
+  }
+  .case-block.result .cb-body { color: #f2f3f5; font-weight: 500; }
+  @media (max-width: 640px) {
+    .case-block { grid-template-columns: 1fr; gap: 5px; }
+    .case-block .cb-label { padding-top: 0; }
+  }
 
   .case-diagram {
     background: #ffffff;
     border-radius: 10px;
     padding: 18px;
     margin: 18px 0;
-    box-shadow: var(--shadow);
+    box-shadow: 0 0 0 1px #33373f;
   }
   .case-diagram svg { width: 100%; height: auto; display: block; }
   .case-code {
-    background: #1c1e22;
+    background: #14161a;
     color: #e6e4df;
+    border: 1px solid #33373f;
     border-radius: 10px;
     padding: 18px 20px;
     margin: 18px 0;
@@ -151,7 +180,7 @@
     text-transform: uppercase;
     letter-spacing: 0.09em;
     font-weight: 700;
-    color: var(--ink-soft);
+    color: #9a9ea6;
     margin: 4px 0 10px;
   }
   .case-doc-link {
@@ -161,27 +190,29 @@
     margin-top: 16px;
     font-size: 0.87rem;
     font-weight: 600;
-    color: var(--accent);
+    color: #8fb0e0;
     text-decoration: none;
     border-bottom: 1px solid transparent;
   }
-  .case-doc-link:hover { border-bottom-color: var(--accent); }
+  .case-doc-link:hover { border-bottom-color: #8fb0e0; }
 
   .builds { display: flex; flex-direction: column; gap: 18px; }
   .build {
     border-radius: 12px;
     padding: 24px 28px;
-    background: var(--bg-alt);
-    box-shadow: var(--shadow);
+    background: #202329;
+    border: 1px solid #2f333b;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2), 0 8px 24px rgba(0,0,0,0.18);
   }
   .build-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
-  .build h3 { margin: 0; font-size: 1.05rem; letter-spacing: -0.01em; }
+  .build h3 { margin: 0; font-size: 1.05rem; letter-spacing: -0.01em; color: #f7f6f3; }
+  .build p { color: #cbced4; }
   .status { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 11px; border-radius: 20px; }
-  .status.shipping { background: #e5f0e7; color: #35704a; }
-  .status.review { background: #f6ecdd; color: #97672b; }
-  .status.dev { background: #e7eaf1; color: #35507d; }
-  .build .stack { font-size: 0.82rem; color: var(--ink-soft); margin-top: 12px; }
-  .build .stack span { font-weight: 700; color: var(--ink); }
+  .status.shipping { background: #1f3d2b; color: #7fce9c; }
+  .status.review { background: #3d3320; color: #e2b877; }
+  .status.dev { background: #22304a; color: #8fb0e0; }
+  .build .stack { font-size: 0.82rem; color: #b6bac1; margin-top: 12px; }
+  .build .stack span { font-weight: 700; color: #f7f6f3; }
 
   @media (max-width: 640px) {
     .case-grid { grid-template-columns: 1fr; }
@@ -373,7 +404,20 @@
       <div class="case">
         <span class="tag">Agentic Workflow Automation</span>
         <h3>Durable orchestration pipeline for AI-driven work processing</h3>
-        <p>I didn't build this orchestration framework from scratch, I inherited it and pushed it a lot further. The core pattern processes work items end to end without a person babysitting every step: a durable orchestrator kicks off a get-work stage, chains into a second activity that loads validated items onto a queue, and a separate queue-triggered function actually does the work asynchronously, so one slow item can't block the whole batch. My contribution was taking that framework and building a standardized, object-oriented orchestration layer on top of it, as an optional path teams could opt into instead of rebuilding the same pipeline logic by hand for every new customer. Nobody was forced onto it, but it was there so a team could apply the blueprint and adapt just the pieces specific to that customer's process instead of starting from a blank file. Every completed item posts back through its own validation queue, so bad postbacks get caught and retried instead of silently disappearing. Failures aren't treated as one bucket either: business exceptions, things where the automation genuinely can't make the call, route to a human review queue, while system exceptions, timeouts, connectivity issues, that kind of thing, get retried or alerted on automatically. I also built in a standing health check that monitors database, third-party API, and auth connectivity so the app can flag or reset itself before anyone notices it's degraded, plus a manual review view so a person can close out or reprocess anything the automation couldn't resolve on its own.</p>
+        <div class="case-blocks">
+          <div class="case-block">
+            <div class="cb-label">Problem</div>
+            <p class="cb-body">Every new customer engagement rebuilt the same durable-orchestration pipeline by hand — get-work, queueing, async processing, exception handling — from a blank file.</p>
+          </div>
+          <div class="case-block">
+            <div class="cb-label">Approach</div>
+            <p class="cb-body">I inherited the core framework and layered a standardized, object-oriented orchestration template on top, as an opt-in path teams could adopt instead of rebuilding. Work flows end to end without babysitting: a durable orchestrator triggers a get-work stage, loads validated items onto a queue, and a separate queue-triggered function does the work asynchronously, so one slow item can't block the batch. Completed items post back through their own validation queue, so bad postbacks get caught and retried instead of silently disappearing.</p>
+          </div>
+          <div class="case-block">
+            <div class="cb-label">Reliability</div>
+            <p class="cb-body">Failures split by type: business exceptions — where the automation can't confidently make the call — route to a human review queue, while system exceptions like timeouts and connectivity drops retry with backoff or alert. A standing health check monitors DB, third-party API, and auth connectivity so the app flags or resets itself before anyone notices it's degraded.</p>
+          </div>
+        </div>
 
         <p class="case-label">Architecture</p>
         <div class="case-diagram">
@@ -479,7 +523,16 @@
       <div class="case">
         <span class="tag">Pre-Sales Solutions Architecture</span>
         <h3>Designing the technical case that wins the deal</h3>
-        <p>An enterprise prospect wasn't going to sign anything until someone proved that connecting their siloed systems, think claims, policy, and case management platforms with no shared source of truth, was actually solvable. That's a pre-sales problem as much as an engineering one. I ran the discovery workshops to map how data actually needed to move, designed an event-driven integration architecture as the technical centerpiece of the proposal, and built the ROI model that translated the engineering reality into something a VP could sign off on. Where the deal called for it, I also scoped a proof-of-concept that validated the riskiest part of the architecture before anyone committed budget, so delivery inherited a design that was already proven instead of a slide deck promise.</p>
+        <div class="case-blocks">
+          <div class="case-block">
+            <div class="cb-label">Problem</div>
+            <p class="cb-body">An enterprise prospect wouldn't sign until someone proved that connecting their siloed claims, policy, and case-management platforms — with no shared source of truth — was actually solvable. A pre-sales problem as much as an engineering one.</p>
+          </div>
+          <div class="case-block">
+            <div class="cb-label">Approach</div>
+            <p class="cb-body">I ran the discovery workshops to map how data actually needed to move, designed an event-driven integration architecture as the technical centerpiece of the proposal, and built the ROI model that translated engineering reality into something a VP could sign off on. Where the deal called for it, I scoped a proof-of-concept validating the riskiest part of the architecture before anyone committed budget.</p>
+          </div>
+        </div>
         <div class="case-grid">
           <div><span class="k">Approach</span><span class="v">Discovery workshops, event-driven architecture design, ROI modeling, PoC validation</span></div>
           <div><span class="k">Stack</span><span class="v">REST/webhook APIs, low-code orchestration, stakeholder workshops</span></div>
@@ -490,7 +543,16 @@
       <div class="case">
         <span class="tag">RPA-to-AI Migration</span>
         <h3>Modernizing legacy RPA into LLM-assisted automation</h3>
-        <p>A long-running RPA program had dozens of bots that were great at structured, rules-based work and fell apart on anything needing judgment: unstructured documents, ambiguous free text, exceptions the decision tree just wasn't built for. Instead of ripping it all out, I scoped a migration path that layered LLM reasoning on top of the existing automation, only for the tasks where rules-based logic was actually breaking, and left the reliable bots doing what they were already good at. The real work was deciding exactly where "deterministic automation" should end and "AI judgment" should start, then building clean interfaces between the two so the whole pipeline stayed auditable.</p>
+        <div class="case-blocks">
+          <div class="case-block">
+            <div class="cb-label">Problem</div>
+            <p class="cb-body">A long-running RPA program had dozens of bots that were great at structured, rules-based work and fell apart on anything needing judgment: unstructured documents, ambiguous free text, exceptions the decision tree wasn't built for.</p>
+          </div>
+          <div class="case-block">
+            <div class="cb-label">Approach</div>
+            <p class="cb-body">Instead of ripping it all out, I scoped a migration that layered LLM reasoning on top of the existing automation — only for the tasks where rules-based logic was actually breaking — and left the reliable bots doing what they were already good at. The real work was deciding exactly where deterministic automation should end and AI judgment should start, then building clean interfaces between the two so the whole pipeline stayed auditable.</p>
+          </div>
+        </div>
         <div class="case-grid">
           <div><span class="k">Approach</span><span class="v">Hybrid RPA + LLM architecture, scoped modernization plan</span></div>
           <div><span class="k">Stack</span><span class="v">Blue Prism, Python, LLM APIs, document/text processing</span></div>
@@ -501,7 +563,20 @@
       <div class="case">
         <span class="tag">Technical Integration Proposal</span>
         <h3>Keeping Jira the single source of truth across three systems</h3>
-        <p>This one's a proposal I put together for an interview exercise, not delivered client work, but it's close to how I'd actually approach the problem so it's worth showing in full. The scenario: a prospective customer wanted to hand off global hardware procurement and lifecycle management to a new IT platform, but their Jira Asset Management instance had to stay the authoritative record auditors query, and it couldn't step on the Mac and Windows device management tools already live. I designed and proposed an integration architecture where the new platform would drive procurement and lifecycle events, the device management tools would report real-time device health, and Jira would reconcile all three into one conflict-resolved record. The proposal included a full field-mapping spec, explicit conflict-resolution rules for when sources disagree (a stale device check-in doesn't get to overrule an active repair status), a PII-stripping layer before anything writes to Jira, and a phased rollout plan that starts read-only and upgrades to real-time sync without re-architecting later. I also built a small local mock server to test my own field-mapping and conflict-resolution assumptions against a simulated version of the platform's API before presenting it, rather than presenting a diagram I hadn't stress-tested at all.</p>
+        <div class="case-blocks">
+          <div class="case-block">
+            <div class="cb-label">Context</div>
+            <p class="cb-body">A proposal I built for an interview exercise — not delivered client work — but close to how I'd actually approach it, so it's worth showing in full.</p>
+          </div>
+          <div class="case-block">
+            <div class="cb-label">Problem</div>
+            <p class="cb-body">A customer wanted to hand global hardware procurement and lifecycle management to a new IT platform, but their Jira Asset Management instance had to stay the authoritative record auditors query — and it couldn't step on the Mac and Windows device-management tools already live.</p>
+          </div>
+          <div class="case-block">
+            <div class="cb-label">Approach</div>
+            <p class="cb-body">I proposed an architecture where the new platform drives procurement and lifecycle events, the device tools report real-time health, and Jira reconciles all three into one conflict-resolved record. It included a full field-mapping spec, explicit conflict-resolution rules (a stale device check-in can't overrule an active repair status), a PII-stripping layer before anything writes to Jira, and a phased rollout that starts read-only and upgrades to real-time sync without re-architecting later. I also built a small local mock server to stress-test my mapping and conflict assumptions against a simulated API before presenting — rather than showing a diagram I hadn't tested.</p>
+          </div>
+        </div>
         <div class="case-grid">
           <div><span class="k">Approach</span><span class="v">Multi-system reconciliation architecture, field mapping, conflict-resolution rules, phased rollout plan</span></div>
           <div><span class="k">Stack</span><span class="v">REST APIs, delta polling, webhook-based event sync, PII-filtering middleware</span></div>
