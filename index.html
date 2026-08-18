@@ -212,12 +212,16 @@
   }
   .build-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
   .build h3 { margin: 0; font-size: 1.05rem; letter-spacing: -0.01em; color: #f7f6f3; }
-  .build p { color: #cbced4; }
+  .build p { color: #cbced4; margin: 0 0 10px; }
+  .build p:last-of-type { margin-bottom: 0; }
   .status { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 11px; border-radius: 20px; }
   .status.shipping { background: #1f3d2b; color: #7fce9c; }
   .status.review { background: #3d3320; color: #e2b877; }
   .status.dev { background: #22304a; color: #8fb0e0; }
   .build .stack { font-size: 0.82rem; color: #b6bac1; margin-top: 12px; }
+  .build .appstore { display: inline-block; margin-top: 14px; line-height: 0; border-radius: 8px; transition: opacity 0.15s ease; }
+  .build .appstore:hover { opacity: 0.82; }
+  .build .appstore svg { height: 42px; width: auto; display: block; }
   .build .stack span { font-weight: 700; color: #f7f6f3; }
 
   @media (max-width: 640px) {
@@ -243,6 +247,17 @@
 </style>
 </head>
 <body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="appstore-badge" viewBox="0 0 135 45">
+    <rect x="0.6" y="0.6" width="133.8" height="43.8" rx="7.2" fill="#000000" stroke="#a6a6a6" stroke-width="1.2"/>
+    <g transform="translate(13.5, 10.5) scale(0.98)" fill="#ffffff">
+      <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/>
+    </g>
+    <text x="45" y="18.5" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="8.4" letter-spacing="0.1">Download on the</text>
+    <text x="44.4" y="35.5" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17.6" font-weight="500" letter-spacing="-0.3">App Store</text>
+  </symbol>
+</svg>
 
 <header class="hero">
   <div class="wrap">
@@ -606,8 +621,27 @@
   <div class="tab-panel" id="tab-builds">
   <section id="builds" style="border-bottom: none;">
     <h2>Personal Builds</h2>
-    <p class="lede">Side projects, actual shipped or shipping products, not mockups. This is the stuff I build for the fun of it, on nights and weekends.</p>
+    <p class="lede">Side projects, actual shipped or in-flight products, not mockups. This is the stuff I build for the fun of it, on nights and weekends.</p>
     <div class="builds">
+
+      <div class="build">
+        <div class="build-head">
+          <h3>Digital Coworker Pipeline</h3>
+          <span class="status dev">Work in progress</span>
+        </div>
+        <p>A runnable, fully local version of the durable orchestration pattern from my first use case. Same shape as the production one, with a get-work orchestrator, a queue-triggered do-work stage, and a postback validation queue, but every proprietary dependency is swapped for a local equivalent so the whole pipeline runs on a laptop with no cloud subscription: Azurite for storage, SQLite for the work store, and a small CLI standing in for the human review dashboard.</p>
+        <p>The interesting change is the validation stage. The original ran hardcoded regex and equality checks, so anything unexpected fell through. This version hands each work item to a Gemini agent that reviews the fields and explains its reasoning, then routes whatever it can't confidently pass into the human review queue instead of guessing.</p>
+        <div class="stack"><span>Stack:</span> Python, Azure Functions (Durable), Azurite, SQLite, Gemini API</div>
+      </div>
+
+      <div class="build">
+        <div class="build-head">
+          <h3>DispatchZero</h3>
+          <span class="status dev">Work in progress</span>
+        </div>
+        <p>A single-operator field service CRM for the solo tradesperson. Clients, jobs, and invoices in one place, built offline-first so it keeps working in a basement or a crawlspace with no signal and reconciles once you're back. The interface is designed for wet, gloved hands: oversized targets, one primary action per screen, and a dashboard that answers "what's next" without any tapping. Currently wiring up Tap to Pay on iPhone and subscription entitlements.</p>
+        <div class="stack"><span>Stack:</span> Swift, Postgres, Custom Offline Sync Engine</div>
+      </div>
 
       <div class="build">
         <div class="build-head">
@@ -615,7 +649,10 @@
           <span class="status shipping">Live</span>
         </div>
         <p>A repair-vs-replace decision engine. You describe what broke, it works through the repair, hire-a-pro, replace, and live-with-it math like an honest broker and shows its reasoning instead of just handing you an answer.</p>
-        <div class="stack"><span>Stack:</span> Swift, Gemini API, on-device estimator logic</div>
+        <div class="stack"><span>Stack:</span> Swift, Gemini API, On-Device Estimator Logic</div>
+        <a class="appstore" href="https://apps.apple.com/us/app/fixworthy/id6788266168" target="_blank" rel="noopener" aria-label="Download Fixworthy on the App Store">
+          <svg viewBox="0 0 135 45" role="img" aria-hidden="true" focusable="false"><use href="#appstore-badge"/></svg>
+        </a>
       </div>
 
       <div class="build">
@@ -624,7 +661,10 @@
           <span class="status shipping">Live</span>
         </div>
         <p>A haptic-only form coach for yoga and PT-style exercises. It tracks your body through ARKit, Apple Watch motion, and AirPods orientation, then corrects your form through vibration alone, no screen, no interruption, just a nudge when you drift out of alignment.</p>
-        <div class="stack"><span>Stack:</span> Swift, ARKit, Core Haptics, watchOS companion app</div>
+        <div class="stack"><span>Stack:</span> Swift, ARKit, Core Haptics, watchOS Companion App</div>
+        <a class="appstore" href="https://apps.apple.com/us/app/flexcue/id6790610128" target="_blank" rel="noopener" aria-label="Download FlexCue on the App Store">
+          <svg viewBox="0 0 135 45" role="img" aria-hidden="true" focusable="false"><use href="#appstore-badge"/></svg>
+        </a>
       </div>
 
       <div class="build">
@@ -634,6 +674,9 @@
         </div>
         <p>A maintenance tracker built for food truck and small fleet operators. Tracks equipment by mileage or hours, logs costs, and pushes alerts before something breaks down mid-shift.</p>
         <div class="stack"><span>Stack:</span> Flutter, Postgres</div>
+        <a class="appstore" href="https://apps.apple.com/us/app/grease-gears/id6782435885" target="_blank" rel="noopener" aria-label="Download Grease &amp; Gears on the App Store">
+          <svg viewBox="0 0 135 45" role="img" aria-hidden="true" focusable="false"><use href="#appstore-badge"/></svg>
+        </a>
       </div>
 
       <div class="build">
@@ -642,7 +685,10 @@
           <span class="status shipping">Live</span>
         </div>
         <p>A presenter timer that keeps you on pace without a screen or a sound. It fires distinct vibration patterns through your phone or Watch at key milestones, so you can feel the time instead of glancing down mid-talk.</p>
-        <div class="stack"><span>Stack:</span> Swift, Core Haptics, watchOS companion, StoreKit 2</div>
+        <div class="stack"><span>Stack:</span> Swift, Core Haptics, watchOS Companion, StoreKit 2</div>
+        <a class="appstore" href="https://apps.apple.com/us/app/silentcue/id6784883359" target="_blank" rel="noopener" aria-label="Download SilentCue on the App Store">
+          <svg viewBox="0 0 135 45" role="img" aria-hidden="true" focusable="false"><use href="#appstore-badge"/></svg>
+        </a>
       </div>
 
       <div class="build">
@@ -651,7 +697,11 @@
           <span class="status shipping">Live</span>
         </div>
         <p>A fantasy sports trade analyzer covering NFL and MLB. Pulls live player values and lets you build a trade with or without a connected roster. There's no clean third-party value source for MLB yet, so I built my own rest-of-season value calculator straight off live stats and roster status from the official MLB Stats API.</p>
-        <div class="stack"><span>Stack:</span> Swift, FantasyCalc API, Sleeper API, MLB Stats API, Postgres</div>
+        <p>Currently wiring up Yahoo Fantasy roster import. That meant negotiating and signing Yahoo's API agreement first, then designing around its hard no-caching term, so Yahoo data is fetched live and discarded rather than stored.</p>
+        <div class="stack"><span>Stack:</span> Swift, FantasyCalc API, Sleeper API, MLB Stats API, Yahoo Fantasy API (in progress), Postgres</div>
+        <a class="appstore" href="https://apps.apple.com/us/app/swaptiq/id6785744338" target="_blank" rel="noopener" aria-label="Download SwaptIQ on the App Store">
+          <svg viewBox="0 0 135 45" role="img" aria-hidden="true" focusable="false"><use href="#appstore-badge"/></svg>
+        </a>
       </div>
 
       <div class="build">
@@ -660,7 +710,10 @@
           <span class="status shipping">Live</span>
         </div>
         <p>A car scanning app that pulls valuation and parts data through Gemini and eBay's API, plus real labor rate estimates by metro area pulled from quarterly US Bureau of Labor Statistics wage data, plus Canadian rates built the same way off Job Bank mechanic wages, using a postal code crosswalk I generated myself from StatCan boundary files to avoid the licensed one. I built the whole thing solo, scan flow, backend, and the App Store submission process, warts and all.</p>
-        <div class="stack"><span>Stack:</span> Flutter, Gemini API, eBay API, BLS &amp; Job Bank wage data, StatCan boundary data, Postgres</div>
+        <div class="stack"><span>Stack:</span> Flutter, Gemini API, eBay API, BLS &amp; Job Bank Wage Data, StatCan Boundary Data, Postgres</div>
+        <a class="appstore" href="https://apps.apple.com/us/app/under-the-hood/id6781524500" target="_blank" rel="noopener" aria-label="Download Under The Hood on the App Store">
+          <svg viewBox="0 0 135 45" role="img" aria-hidden="true" focusable="false"><use href="#appstore-badge"/></svg>
+        </a>
       </div>
 
     </div>
