@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Drew Spagna, AI Solutions Architect</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316181c'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='20' font-weight='700' fill='%23f7f6f3'%3ED%3C/text%3E%3C/svg%3E">
 <style>
   :root {
     --ink: #1c1e22;
@@ -239,6 +240,48 @@
 
   footer { padding: 48px 0 64px; text-align: center; color: var(--ink-soft); font-size: 0.85rem; }
   footer a { color: var(--accent); text-decoration: none; }
+  footer a { transition: color 0.15s ease; }
+  footer a:hover { color: var(--ink); }
+
+  /* ---------- interaction polish ---------- */
+  ::selection { background: #cddcf5; color: var(--ink); }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+  header.hero a:focus-visible,
+  .case a:focus-visible,
+  .build a:focus-visible,
+  .case-doc-link:focus-visible { outline-color: #8fb0e0; }
+
+  a { -webkit-tap-highlight-color: rgba(53, 80, 125, 0.12); }
+
+  nav.tabs { transition: box-shadow 0.25s ease; }
+  nav.tabs.stuck { box-shadow: 0 1px 14px rgba(28, 30, 34, 0.07); }
+
+  .case, .build {
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .case:hover, .build:hover {
+    transform: translateY(-2px);
+    border-color: #3a3f48;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2), 0 16px 38px rgba(0,0,0,0.24);
+  }
+
+  .case-doc-link { transition: color 0.18s ease, border-color 0.18s ease, transform 0.18s ease; }
+  .case-doc-link:hover { transform: translateX(2px); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+    .case:hover, .build:hover { transform: none; }
+  }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
 <style>
@@ -278,16 +321,16 @@
 </header>
 
 <nav class="tabs">
-  <div class="wrap">
-    <button type="button" data-tab="main" class="active">Profile</button>
-    <button type="button" data-tab="usecases">Use Cases</button>
-    <button type="button" data-tab="builds">Personal Builds</button>
+  <div class="wrap" role="tablist" aria-label="Sections">
+    <button type="button" role="tab" id="tabbtn-main" aria-controls="tab-main" aria-selected="true" data-tab="main" class="active">Profile</button>
+    <button type="button" role="tab" id="tabbtn-usecases" aria-controls="tab-usecases" aria-selected="false" tabindex="-1" data-tab="usecases">Use Cases</button>
+    <button type="button" role="tab" id="tabbtn-builds" aria-controls="tab-builds" aria-selected="false" tabindex="-1" data-tab="builds">Personal Builds</button>
   </div>
 </nav>
 
 <div class="wrap">
 
-  <div class="tab-panel active" id="tab-main">
+  <div class="tab-panel active" id="tab-main" role="tabpanel" aria-labelledby="tabbtn-main">
 
   <section id="about">
     <h2>About</h2>
@@ -421,7 +464,7 @@
 
   </div>
 
-  <div class="tab-panel" id="tab-usecases">
+  <div class="tab-panel" id="tab-usecases" role="tabpanel" aria-labelledby="tabbtn-usecases">
   <section id="cases" style="border-bottom: none;">
     <h2>Use Cases</h2>
     <p class="lede">Representative of real project work I've delivered. Details generalized to protect customer confidentiality.</p>
@@ -618,7 +661,7 @@
   </section>
   </div>
 
-  <div class="tab-panel" id="tab-builds">
+  <div class="tab-panel" id="tab-builds" role="tabpanel" aria-labelledby="tabbtn-builds">
   <section id="builds" style="border-bottom: none;">
     <h2>Personal Builds</h2>
     <p class="lede">Side projects, actual shipped or in-flight products, not mockups. This is the stuff I build for the fun of it, on nights and weekends.</p>
@@ -728,36 +771,58 @@
 
 <script>
   (function () {
-    var buttons = document.querySelectorAll('nav.tabs button');
+    var nav = document.querySelector('nav.tabs');
+    var buttons = Array.prototype.slice.call(document.querySelectorAll('nav.tabs button'));
     var panels = {
       main: document.getElementById('tab-main'),
       usecases: document.getElementById('tab-usecases'),
       builds: document.getElementById('tab-builds')
     };
 
-    function activate(tab) {
+    function activate(tab, moveFocus) {
       if (!panels[tab]) tab = 'main';
       buttons.forEach(function (b) {
-        b.classList.toggle('active', b.getAttribute('data-tab') === tab);
+        var on = b.getAttribute('data-tab') === tab;
+        b.classList.toggle('active', on);
+        b.setAttribute('aria-selected', on ? 'true' : 'false');
+        b.tabIndex = on ? 0 : -1;
+        if (on && moveFocus) b.focus();
       });
       Object.keys(panels).forEach(function (key) {
         panels[key].classList.toggle('active', key === tab);
       });
     }
 
-    buttons.forEach(function (b) {
+    function go(tab, moveFocus) {
+      // replaceState instead of location.hash so selecting a tab does not jump the page
+      history.replaceState(null, '', '#' + tab);
+      activate(tab, moveFocus);
+    }
+
+    buttons.forEach(function (b, i) {
       b.addEventListener('click', function () {
-        var tab = b.getAttribute('data-tab');
-        window.location.hash = tab;
-        activate(tab);
+        go(b.getAttribute('data-tab'), false);
+      });
+      b.addEventListener('keydown', function (e) {
+        var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!d) return;
+        e.preventDefault();
+        var next = buttons[(i + d + buttons.length) % buttons.length];
+        go(next.getAttribute('data-tab'), true);
       });
     });
 
     window.addEventListener('hashchange', function () {
-      activate(window.location.hash.replace('#', ''));
+      activate(window.location.hash.replace('#', ''), false);
     });
 
-    activate(window.location.hash.replace('#', '') || 'main');
+    function onScroll() {
+      if (nav) nav.classList.toggle('stuck', nav.getBoundingClientRect().top <= 0);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    activate(window.location.hash.replace('#', '') || 'main', false);
+    onScroll();
   })();
 </script>
 
