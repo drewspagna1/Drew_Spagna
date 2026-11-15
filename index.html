@@ -688,15 +688,6 @@
 
       <div class="build">
         <div class="build-head">
-          <h3>TuneCue</h3>
-          <span class="status dev">Work in progress</span>
-        </div>
-        <p>A haptic-first chromatic tuner for iPhone and Apple Watch. Directional, rate-encoded vibration carries sharp/flat/in-tune instead of a single buzz on arrival, so the Watch app tunes standalone with no phone required. The optional visualizer is a hand-built Metal shader in the MilkDrop/projectM style, inspired by their plasma look but built from scratch since neither has a maintained iOS or watchOS path.</p>
-        <div class="stack"><span>Stack:</span> Swift, CoreHaptics, AVAudioEngine, Metal (SwiftUI colorEffect), watchOS Companion App</div>
-      </div>
-
-      <div class="build">
-        <div class="build-head">
           <h3>Fixworthy</h3>
           <span class="status shipping">Live</span>
         </div>
@@ -750,8 +741,20 @@
         </div>
         <p>A fantasy sports trade analyzer covering NFL and MLB. Pulls live player values and lets you build a trade with or without a connected roster. There's no clean third-party value source for MLB yet, so I built my own rest-of-season value calculator straight off live stats and roster status from the official MLB Stats API.</p>
         <p>Currently wiring up Yahoo Fantasy roster import. That meant negotiating and signing Yahoo's API agreement first, then designing around its hard no-caching term, so Yahoo data is fetched live and discarded rather than stored.</p>
-        <div class="stack"><span>Stack:</span> Swift, FantasyCalc API, Sleeper API, MLB Stats API, Yahoo Fantasy API, Fleaflicker API, Postgres</div>
+        <div class="stack"><span>Stack:</span> Swift, FantasyCalc API, Sleeper API, MLB Stats API, Yahoo Fantasy API (in progress), Postgres</div>
         <a class="appstore" href="https://apps.apple.com/us/app/swaptiq/id6785744338" target="_blank" rel="noopener" aria-label="Download SwaptIQ on the App Store">
+          <svg viewBox="0 0 135 45" role="img" aria-hidden="true" focusable="false"><use href="#appstore-badge"/></svg>
+        </a>
+      </div>
+
+      <div class="build">
+        <div class="build-head">
+          <h3>TuneCue</h3>
+          <span class="status shipping">Live</span>
+        </div>
+        <p>A haptic-first chromatic tuner for iPhone and Apple Watch. Directional, rate-encoded vibration carries sharp/flat/in-tune instead of a single buzz on arrival, so the Watch app tunes standalone with no phone required. The optional visualizer is a hand-built Metal shader in the MilkDrop/projectM style, inspired by their plasma look but built from scratch since neither has a maintained iOS or watchOS path.</p>
+        <div class="stack"><span>Stack:</span> Swift, CoreHaptics, AVAudioEngine, Metal (SwiftUI colorEffect), watchOS Companion App</div>
+        <a class="appstore" href="https://apps.apple.com/us/app/tunecue/id6804586242" target="_blank" rel="noopener" aria-label="Download TuneCue on the App Store">
           <svg viewBox="0 0 135 45" role="img" aria-hidden="true" focusable="false"><use href="#appstore-badge"/></svg>
         </a>
       </div>
